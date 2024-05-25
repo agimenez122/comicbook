@@ -1,0 +1,21 @@
+{
+  "name": "comicbook",
+  "version": "1.0.0",
+  "description": "Translate, generate unique PDFs from other files.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ginjol",
+  "license": "ISC",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "node-unrar-js": "^2.0.2",
+    "pdfkit": "^0.15.0",
+    "prompt": "^1.3.0",
+    "unrar": "^0.2.0",
+    "unrar-promise": "^3.1.0",
+    "unzipper": "^0.11.6"
+  }
+}

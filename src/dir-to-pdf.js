@@ -1,7 +1,7 @@
 import PDFDocument from 'pdfkit';
 import path from 'path';
 import fs from 'fs';
-import { ensureDirectoryExists, __dirname } from './utils.js';
+import { ensureDirectoryExists, __dirname } from './utils/utils.js';
 
 const dirToPdf = () => {
   ensureDirectoryExists('../out');

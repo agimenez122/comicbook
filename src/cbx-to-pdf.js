@@ -2,8 +2,9 @@ import { createExtractorFromFile } from 'node-unrar-js'
 import fs from 'fs';
 import path from 'path';
 import { imgToPdf } from './img-to-pdf.js'
+import { createTempDir, deleteTempDir } from './utils/utils.js'
 
-async function extractRarArchive(file, destination) {
+const extractRarArchive = async (file, destination) => {
   try {
     // Create the extractor with the file information (returns a promise)
     const extractor = await createExtractorFromFile({
@@ -19,7 +20,7 @@ async function extractRarArchive(file, destination) {
   }
 }
 
-function getFilesInDirectory(dirPath) {
+const getFilesInDirectory = (dirPath) => {
     return new Promise((resolve, reject) => {
         fs.readdir(dirPath, (err, files) => {
             if (err) {
@@ -37,19 +38,21 @@ function getFilesInDirectory(dirPath) {
     });
 }
 
-// Ejemplo de uso
-const directoryPath = 'input'; // Reemplaza con la ruta de tu directorio
+const directoryPath = 'input'; 
 
 const extractcbx = () =>{
     getFilesInDirectory(directoryPath)
     .then(files => {
-       
         const imageFiles = files.filter(file => ['.cbz', '.cbr'].includes(path.extname(file).toLowerCase()));
         console.log('Archivos en el directorio:', imageFiles);
         imageFiles.map(cbxfile => {
-            extractRarArchive(`input/${cbxfile}`, 'input');
+            createTempDir()
+            extractRarArchive(`input/${cbxfile}`, 'temp').then(result => {
+                console.log(result)
+                imgToPdf('temp')
+            })
         })
-        imgToPdf()
+        
     })
     .catch(error => {
         console.error('Error leyendo el directorio:', error);

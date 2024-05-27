@@ -1,15 +1,15 @@
 import PDFDocument from 'pdfkit'
 import path from 'path'
 import fs from 'fs'
-import { ensureDirectoryExists, __dirname } from './utils.js'
+import { ensureDirectoryExists, __dirname, deleteTempDir } from './utils/utils.js'
 
-const imgToPdf = () =>{
+const imgToPdf = (param) =>{
   ensureDirectoryExists('../out')
-  ensureDirectoryExists('../input')
+  ensureDirectoryExists(`../${param}`)
   // Params
   // const pdfFilePath = `out/${process.argv[2]}.pdf`;
   const pdfFilePath = `out/output.pdf`;
-  const pngDir = 'input/'; 
+  const pngDir = `${param}/`; 
   
   const doc = new PDFDocument();
   const writeStream = fs.createWriteStream(pdfFilePath);
@@ -42,8 +42,9 @@ const imgToPdf = () =>{
   
   writeStream.on('finish', () => {
     console.log(`PDF file created: ${pdfFilePath}`);
+    deleteTempDir()
   });
-
+  
 }
 
 export { imgToPdf }

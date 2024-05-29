@@ -41,6 +41,7 @@ const getFilesInDirectory = (dirPath) => {
 const directoryPath = 'input'; 
 
 const extractcbx = () =>{
+    console.log('Converting cbr files to PDF book');
     getFilesInDirectory(directoryPath)
     .then(files => {
         const imageFiles = files.filter(file => ['.cbz', '.cbr'].includes(path.extname(file).toLowerCase()));

@@ -4,6 +4,8 @@ import fs from 'fs';
 import { ensureDirectoryExists, __dirname } from './utils/utils.js';
 
 const dirToPdf = () => {
+  console.log('Converting directories with img files to PDF book')
+  
   ensureDirectoryExists('../out');
   ensureDirectoryExists('../input');
 

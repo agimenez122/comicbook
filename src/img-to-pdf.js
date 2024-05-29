@@ -4,6 +4,8 @@ import fs from 'fs'
 import { ensureDirectoryExists, __dirname, deleteTempDir } from './utils/utils.js'
 
 const imgToPdf = (param) =>{
+  console.log('Converting png or jpg files to PDF book');
+  
   ensureDirectoryExists('../out')
   ensureDirectoryExists(`../${param}`)
   // Params

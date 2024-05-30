@@ -8,8 +8,7 @@ const imgToPdf = (param) =>{
   
   ensureDirectoryExists('../out')
   ensureDirectoryExists(`../${param}`)
-  // Params
-  // const pdfFilePath = `out/${process.argv[2]}.pdf`;
+
   const pdfFilePath = `out/output.pdf`;
   const pngDir = `${param}/`; 
   

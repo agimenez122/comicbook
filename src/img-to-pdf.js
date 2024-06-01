@@ -3,9 +3,10 @@ import path from 'path'
 import fs from 'fs'
 import { ensureDirectoryExists, __dirname, deleteTempDir } from './utils/utils.js'
 import { config } from './config/config.js'
+import { messages } from './assets/messages.js'
 
 const imgToPdf = (param) =>{
-  console.log('Converting png or jpg files to PDF book');
+  console.log(messages.log.convertingImages);
   
   ensureDirectoryExists(`../${config.out_dir}`)
   ensureDirectoryExists(`../${param}`)
@@ -20,7 +21,7 @@ const imgToPdf = (param) =>{
   // Generate PDF document
   fs.readdir(pngDir, (err, files) => {
     if (err) {
-      return console.error(`Could not read the directory: ${err.message}`);
+      return console.error(`${messages.error.directoryReadError} ${err.message}`);
     }
   
     const imageFiles = files.filter(file => ['.png', '.jpg'].includes(path.extname(file).toLowerCase()));
@@ -37,7 +38,7 @@ const imgToPdf = (param) =>{
   });
   
   writeStream.on('finish', () => {
-    console.log(`PDF file created: ${pdfFilePath}`);
+    console.log(`${messages.log.pdfCreated} ${pdfFilePath}`);
     deleteTempDir()
   });
   

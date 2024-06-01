@@ -1,63 +1,64 @@
-import PDFDocument from 'pdfkit';
-import path from 'path';
-import fs from 'fs';
-import { ensureDirectoryExists, __dirname } from './utils/utils.js';
+import PDFDocument from 'pdfkit'
+import path from 'path'
+import fs from 'fs'
+import { ensureDirectoryExists, __dirname } from './utils/utils.js'
+import { config } from './config/config.js'
+import { messages } from './assets/messages.js'
 
 const dirToPdf = () => {
-  console.log('Converting directories with img files to PDF book')
+  console.log(messages.log.convertingDirectories)
   
-  ensureDirectoryExists('../out');
-  ensureDirectoryExists('../input');
+  ensureDirectoryExists(`../${config.out_dir}`)
+  ensureDirectoryExists(`../${config.in_dir}`)
 
-  const inputDir = 'input/';
-  const outputDir = 'out/';
+  const inputDir = `${config.in_dir}/`
+  const outputDir = `${config.out_dir}/`
+
+  const dirError = (err) => {
+    return console.error(`${messages.error.directoryReadError} ${err.message}`)
+  }
 
   // Leer todas las carpetas dentro del directorio de entrada
   fs.readdir(inputDir, (err, folders) => {
     if (err) {
-      return console.error(`No se pudo leer el directorio: ${err.message}`);
+      return dirError(err)
     }
 
     folders.forEach(folder => {
-      const folderPath = path.join(inputDir, folder);
-      const pdfFilePath = path.join(outputDir, `${folder}.pdf`);
+      const folderPath = path.join(inputDir, folder)
+      const pdfFilePath = path.join(outputDir, `${folder}.pdf`)
 
       fs.stat(folderPath, (err, stats) => {
         if (err) {
-          return console.error(`No se pudo obtener información del directorio: ${err.message}`);
+          return dirError(err)
         }
 
         if (stats.isDirectory()) {
-          const doc = new PDFDocument();
-          const writeStream = fs.createWriteStream(pdfFilePath);
-          doc.pipe(writeStream);
+          const doc = new PDFDocument()
+          const writeStream = fs.createWriteStream(pdfFilePath)
+          doc.pipe(writeStream)
 
           fs.readdir(folderPath, (err, files) => {
             if (err) {
-              return console.error(`No se pudo leer el contenido de la carpeta: ${err.message}`);
+              return dirError(err)
             }
 
-            const imageFiles = files.filter(file => ['.png', '.jpg'].includes(path.extname(file).toLowerCase()));
+            const imageFiles = files.filter(file => ['.png', '.jpg'].includes(path.extname(file).toLowerCase()))
 
             imageFiles.forEach((imageFile, index) => {
               if (index > 0) {
-                doc.addPage();
+                doc.addPage()
               }
-
-              const imagePath = path.join(folderPath, imageFile);
-
-              doc.image(imagePath, {
-                fit: [500, 700],
-                align: 'center',
-                valign: 'center'
-              });
+              
+              doc.image(path.join(folderPath, imageFile), config.image)
             });
 
             doc.end();
           });
 
           writeStream.on('finish', () => {
-            console.log(`Archivo PDF creado: ${pdfFilePath}`);
+            console.log(`${messages.log.pdfCreated} ${pdfFilePath}`);
+            
           });
         }
       });
